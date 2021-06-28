@@ -24,6 +24,6 @@ class PatientController {
     ResponseEntity<List<ResultDTO>> getPatientsVisitsByCityAndSpecialization(
             @PathVariable @RequestParam(defaultValue = "") String city,
             @PathVariable @RequestParam(defaultValue = "") String practitioner) {
-        return ResponseEntity.ok().body(patientService.getAllNonEntityDTOs(city, practitioner));
+        return ResponseEntity.ok().body(patientService.findAll(city, practitioner));
     }
 }
