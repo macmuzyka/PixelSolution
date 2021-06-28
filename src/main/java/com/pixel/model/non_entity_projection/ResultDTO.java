@@ -10,14 +10,24 @@ public class ResultDTO {
     private String firstName;
     private String lastName;
     private int visits;
+    private String specialization;
 
-    ResultDTO(final String firstName, final String lastName, final int visits) {
+    ResultDTO(final String firstName, final String lastName, final int visits, final String specializaition) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.visits = visits;
+        this.specialization = specializaition;
     }
 
     ResultDTO() {
+    }
+
+    String getSpecialization() {
+        return specialization;
+    }
+
+    void setSpecialization(final String specialization) {
+        this.specialization = specialization;
     }
 
     String getFirstName() {
