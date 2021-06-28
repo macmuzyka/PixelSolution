@@ -24,12 +24,12 @@ class PatientService {
         this.entityManager = entityManager;
     }
 
-    public List<PatientVisitsDTO> findAllDTOs(String city, String specialization) {
+    public List<PatientVisitsDTO> findAllPatientVisitsDTOs(String city, String specialization) {
         return patientRepository.countPatientVisits(city, specialization).orElse(Collections.emptyList());
     }
 
     // ALTERNATIVE METHOD TO EXTRACT DTOs FROM DATABASE USING ENTITY MANAGER AND RESULT TRANSFORMER
-    public List<PatientVisitsDTO> findAllPatientVisitsDTOs(String city, String specialization) {
+    public List<PatientVisitsDTO> findAllDTOs(String city, String specialization) {
         List<PatientVisitsDTO> nonEntityDTOs;
         nonEntityDTOs = entityManager.createNativeQuery("SELECT FIRST_NAME, LAST_NAME, COUNT(*) AS visitCounter " +
                 "FROM PATIENTS p " +
