@@ -23,4 +23,13 @@ public interface PractitionerRepository extends JpaRepository<Practitioner, Inte
             "          END " +
             "GROUP BY pr.SPECIALIZATION")
     Optional<List<PractitionerVisitsDTO>> findPractitionerVisits(@Param("specialization") String specialization);
+
+
+    /*@Query(value = "SELECT new com.pixel.model.non_entity_projection.PractitionerVisitsDTO(pr.specialization, COUNT(v.id)) FROM " +
+            "Practitioner pr INNER JOIN Visit v ON pr.id = v.practitioner_id " +
+            "WHERE (CASE WHEN :specialization = 'ALL' OR :specialization IS NULL " +
+            "THEN (pr.specialization LIKE '%') ELSE " +
+            "(pr.specialization = :specialization) END) = true " +
+            "GROUP BY pr.specialization")
+    Optional<List<PractitionerVisitsDTO>> findSomething(@Param("specialization") String specialization);*/
 }
