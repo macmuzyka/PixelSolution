@@ -1,6 +1,6 @@
 package com.pixel.controller;
 
-import com.pixel.model.non_entity_projection.ResultDTO;
+import com.pixel.model.non_entity_projection.PatientVisitsDTO;
 import com.pixel.model.repository.PatientRepository;
 import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Service;
@@ -24,28 +24,32 @@ class PatientService {
         this.entityManager = entityManager;
     }
 
-    public List<ResultDTO> findAll(String city, String specialization) {
+    public List<PatientVisitsDTO> findAllDTOs(String city, String specialization) {
         return patientRepository.countPatientVisits(city, specialization).orElse(Collections.emptyList());
     }
 
     // ALTERNATIVE METHOD TO EXTRACT DTOs FROM DATABASE USING ENTITY MANAGER AND RESULT TRANSFORMER
-    public List<ResultDTO> getAllNonEntityDTOs(String city, String specialization) {
-        List<ResultDTO> nonEntityDTOs;
-        nonEntityDTOs = entityManager.createNativeQuery("SELECT FIRST_NAME, LAST_NAME, COUNT(*) AS VISIT_COUNTER FROM PATIENTS " +
-                "INNER JOIN VISITS ON PATIENTS.ID = VISITS.PATIENT_ID " +
-                "INNER JOIN PRACTITIONERS ON PRACTITIONERS.ID = VISITS.PRACTITIONER_ID " +
+    public List<PatientVisitsDTO> findAllPatientVisitsDTOs(String city, String specialization) {
+        List<PatientVisitsDTO> nonEntityDTOs;
+        nonEntityDTOs = entityManager.createNativeQuery("SELECT FIRST_NAME, LAST_NAME, COUNT(*) AS visitCounter " +
+                "FROM PATIENTS p " +
+                "         INNER JOIN VISITS v ON p.ID = v.PATIENT_ID " +
+                "         INNER JOIN PRACTITIONERS pr ON v.PRACTITIONER_ID = pr.ID " +
                 "WHERE CASE " +
-                "           WHEN SPECIALIZATION != 'ALL' OR SPECIALIZATION IS NOT NULL THEN" +
-                "                 SPECIALIZATION = :specialization " +
-                "       END " +
-                "AND" +
-                "      CASE" +
-                "           WHEN CITY != 'ALL' OR CITY IS NOT NULL THEN" +
-                "                CITY = :city" +
-                "            END " +
+                "          WHEN :specialization = 'ALL' OR :specialization IS NULL THEN " +
+                "                  pr.SPECIALIZATION LIKE '%' " +
+                "          ELSE " +
+                "                  pr.SPECIALIZATION = :specialization " +
+                "    END " +
+                "  AND CASE " +
+                "          WHEN :city = 'ALL' OR p.CITY IS NULL THEN " +
+                "                  p.CITY LIKE '%' " +
+                "          ELSE " +
+                "                  p.CITY = :city " +
+                "    END " +
                 "GROUP BY FIRST_NAME").setParameter("specialization", specialization)
                 .setParameter("city", city)
-                .unwrap(org.hibernate.Query.class).setResultTransformer(Transformers.aliasToBean(ResultDTO.class)).list();
+                .unwrap(org.hibernate.Query.class).setResultTransformer(Transformers.aliasToBean(PatientVisitsDTO.class)).getResultList();
         return nonEntityDTOs;
     }
 }
