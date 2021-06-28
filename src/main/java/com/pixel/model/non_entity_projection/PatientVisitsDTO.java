@@ -5,29 +5,19 @@ package com.pixel.model.non_entity_projection;
  * on 27.06.2021
  */
 
-public class ResultDTO {
+public class PatientVisitsDTO {
 
     private String firstName;
     private String lastName;
     private int visits;
-    private String specialization;
 
-    ResultDTO(final String firstName, final String lastName, final int visits, final String specializaition) {
+    public PatientVisitsDTO(final String firstName, final String lastName, final int visits, final String specializaition) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.visits = visits;
-        this.specialization = specializaition;
     }
 
-    ResultDTO() {
-    }
-
-    String getSpecialization() {
-        return specialization;
-    }
-
-    void setSpecialization(final String specialization) {
-        this.specialization = specialization;
+    public PatientVisitsDTO() {
     }
 
     String getFirstName() {
