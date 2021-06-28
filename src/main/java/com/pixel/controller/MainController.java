@@ -25,14 +25,14 @@ class MainController {
 
     @GetMapping("/patients/city={city}&practitioner={practitioner}")
     ResponseEntity<List<PatientVisitsDTO>> getPatientsVisitsByCityAndSpecialization(
-            @PathVariable @RequestParam(defaultValue = "ALL") String city,
-            @PathVariable @RequestParam(defaultValue = "ALL") String practitioner) {
-        return ResponseEntity.ok().body(patientService.findAllDTOs(city, practitioner));
+            @PathVariable String city,
+            @PathVariable String practitioner) {
+        return ResponseEntity.ok().body(patientService.findAllPatientVisitsDTOs(city, practitioner));
     }
 
-    @GetMapping("/practitioners/practitioner={practitioner}")
+    @GetMapping("/practitioner={practitioner}")
     ResponseEntity<List<PractitionerVisitsDTO>> getPractitionerVisits(
-            @PathVariable @RequestParam(defaultValue = "ALL") String practitioner) {
+            @PathVariable String practitioner) {
         return ResponseEntity.ok().body((practitionerService.findAllPractitionersVisitsDTOs(practitioner)));
     }
 
