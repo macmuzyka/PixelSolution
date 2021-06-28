@@ -1,6 +1,4 @@
 Pixel recruitment task.
 Unfortunately I wasn't able to meet second part of the task requirements of displaying 
-the results of a query either due to bad mapping to non-entity-projection object 
-or not correct sql query itself.
-Data from csv files is kept in database given in application properties 
-url path in project file
+the results of a query. Cannot determine how to get the results of a native query to be transferred (result table from
+multiple joined columns) to be exposed to the world.
