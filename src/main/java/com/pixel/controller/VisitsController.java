@@ -14,26 +14,25 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/visits")
-class MainController {
-    private final PatientService patientService;
-    private final PractitionerService practitionerService;
+class VisitsController {
+    private final VisitsService visitsService;
 
-    MainController(final PatientService patientService, final PractitionerService practitionerService) {
-        this.patientService = patientService;
-        this.practitionerService = practitionerService;
+    VisitsController(final VisitsService visitsService) {
+        this.visitsService = visitsService;
+
     }
 
     @GetMapping("/patients/city={city}&practitioner={practitioner}")
     ResponseEntity<List<PatientVisitsDTO>> getPatientsVisitsByCityAndSpecialization(
             @PathVariable String city,
             @PathVariable String practitioner) {
-        return ResponseEntity.ok().body(patientService.findAllPatientVisitsDTOs(city, practitioner));
+        return ResponseEntity.ok().body(visitsService.findPatientVisits(city, practitioner));
     }
 
     @GetMapping("/practitioner={practitioner}")
     ResponseEntity<List<PractitionerVisitsDTO>> getPractitionerVisits(
             @PathVariable String practitioner) {
-        return ResponseEntity.ok().body((practitionerService.findAllPractitionersVisitsDTOs(practitioner)));
+        return ResponseEntity.ok().body((visitsService.findPractitionerVisits(practitioner)));
     }
 
 }
