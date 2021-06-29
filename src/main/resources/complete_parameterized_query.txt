@@ -4,13 +4,13 @@ SELECT FIRST_NAME, LAST_NAME, COUNT(*) AS visitCounter
                              INNER JOIN VISITS v ON p.ID = v.PATIENT_ID
                              INNER JOIN PRACTITIONERS pr ON v.PRACTITIONER_ID = pr.ID
                     WHERE CASE
-                              WHEN :specialization = 'ALL' OR :specialization IS NULL THEN
+                              WHEN :specialization = 'ALL' OR :specialization = '' THEN
                                       pr.SPECIALIZATION LIKE '%'
                               ELSE
                                       pr.SPECIALIZATION = :specialization
                         END
                       AND CASE
-                              WHEN :city = 'ALL' OR p.CITY IS NULL THEN
+                              WHEN :city = 'ALL' OR :city = '' IS NULL THEN
                                       p.CITY LIKE '%'
                               ELSE
                                       p.CITY = :city
@@ -22,7 +22,7 @@ SELECT pr.SPECIALIZATION, COUNT(*) AS TOTAL_VISITS
 FROM PRACTITIONERS pr
          INNER JOIN VISITS v ON pr.ID = v.PRACTITIONER_ID
 WHERE CASE
-          WHEN :specialization = 'ALL' OR :specialization IS NULL
+          WHEN :specialization = 'ALL' OR :specialization = ''
               THEN pr.SPECIALIZATION LIKE '%'
           ELSE
               pr.SPECIALIZATION = :specialization
