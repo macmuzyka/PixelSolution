@@ -1,6 +1,6 @@
 package com.pixel.csvutils.service;
 
-import com.pixel.csvutils.handler.PatientCSVHandler;
+import com.pixel.csvutils.handler.PatientFile;
 import com.pixel.model.Patient;
 import com.pixel.model.repository.PatientRepository;
 import org.springframework.stereotype.Service;
@@ -15,18 +15,20 @@ import java.util.List;
  */
 
 @Service
-public class PatientFile implements CSVService {
+public class PatientRecords implements CSVPersistence {
 
     private final PatientRepository patientRepository;
+    private final PatientFile patientFile;
 
-    PatientFile(final PatientRepository repository) {
+    PatientRecords(final PatientRepository repository, final PatientFile patientFile) {
         this.patientRepository = repository;
+        this.patientFile = patientFile;
     }
 
     @Override
-    public void save(MultipartFile file) throws IOException {
+    public void save(MultipartFile file) {
         try {
-            List<Patient> patients = PatientCSVHandler.fromCSVFileToPatients(file.getInputStream());
+            List<Patient> patients = patientFile.fromFileToRecordsList(file.getInputStream());
             patientRepository.saveAll(patients);
         } catch (IOException ioe) {
             System.out.println("Failed to get patient csv data from file: " + ioe.getMessage());
