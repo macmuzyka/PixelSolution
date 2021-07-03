@@ -1,6 +1,6 @@
 package com.pixel.csvutils.service;
 
-import com.pixel.csvutils.handler.PatientToPractitionerCSVHandler;
+import com.pixel.csvutils.handler.PatientToPractitionerFile;
 import com.pixel.model.PatientToPractitioner;
 import com.pixel.model.repository.PatientToPractitionerRepository;
 import org.springframework.stereotype.Service;
@@ -15,17 +15,20 @@ import java.util.List;
  */
 
 @Service
-public class P2PFile implements CSVService {
-    PatientToPractitionerRepository patientToPractitionerRepository;
+public class P2PRecords implements CSVPersistence {
+    private final PatientToPractitionerRepository patientToPractitionerRepository;
+    private final PatientToPractitionerFile patientToPractitionerFile;
 
-    P2PFile(final PatientToPractitionerRepository patientToPractitionerRepository) {
+    P2PRecords(final PatientToPractitionerRepository patientToPractitionerRepository,
+               final PatientToPractitionerFile patientToPractitionerFile) {
         this.patientToPractitionerRepository = patientToPractitionerRepository;
+        this.patientToPractitionerFile = patientToPractitionerFile;
     }
 
     @Override
-    public void save(MultipartFile file) throws IOException {
+    public void save(MultipartFile file) {
         try {
-            List<PatientToPractitioner> p2pList = PatientToPractitionerCSVHandler.fromCSVFileToPractitioners(file.getInputStream());
+            List<PatientToPractitioner> p2pList = patientToPractitionerFile.fromFileToRecordsList(file.getInputStream());
             patientToPractitionerRepository.saveAll(p2pList);
         } catch (IOException ioe) {
             System.out.println("Failed to get patient to practitioner csv data from file: " + ioe.getMessage());
