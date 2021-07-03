@@ -1,30 +1,27 @@
 2.1 query
-SELECT FIRST_NAME, LAST_NAME, COUNT(*) AS visitCounter
-                    FROM PATIENTS p
-                             INNER JOIN VISITS v ON p.ID = v.PATIENT_ID
-                             INNER JOIN PRACTITIONERS pr ON v.PRACTITIONER_ID = pr.ID
-                    WHERE CASE
-                              WHEN :specialization = 'ALL' OR :specialization = '' THEN
-                                      pr.SPECIALIZATION LIKE '%'
-                              ELSE
-                                      pr.SPECIALIZATION = :specialization
-                        END
-                      AND CASE
-                              WHEN :city = 'ALL' OR :city = '' IS NULL THEN
-                                      p.CITY LIKE '%'
-                              ELSE
-                                      p.CITY = :city
-                        END
-                    GROUP BY FIRST_NAME
+"SELECT FIRST_NAME, LAST_NAME, COUNT(*) AS VISITS " +
+                        "FROM PATIENTS p " +
+                        "INNER JOIN VISITS v ON p.ID = v.PATIENT_ID " +
+                        "INNER JOIN PRACTITIONERS pr ON v.PRACTITIONER_ID = pr.ID " +
+                        "WHERE (CASE " +
+                        "WHEN ('%1$s' = 'ALL') OR ('%1$s' = '') " +
+                        "THEN (pr.SPECIALIZATION LIKE '%%') " +
+                        "ELSE (pr.SPECIALIZATION = '%1$s') " +
+                        "END) " +
+                        "AND (CASE " +
+                        "WHEN ('%2$s' = 'ALL') OR ('%2$s' = '') " +
+                        "THEN (p.CITY LIKE '%%') " +
+                        "ELSE (p.CITY IN (%3$s)) " +
+                        "END) " +
+                        "GROUP BY FIRST_NAME"
 
 2.2 query
-SELECT pr.SPECIALIZATION, COUNT(*) AS TOTAL_VISITS
-FROM PRACTITIONERS pr
-         INNER JOIN VISITS v ON pr.ID = v.PRACTITIONER_ID
-WHERE CASE
-          WHEN :specialization = 'ALL' OR :specialization = ''
-              THEN pr.SPECIALIZATION LIKE '%'
-          ELSE
-              pr.SPECIALIZATION = :specialization
-          END
-GROUP BY pr.SPECIALIZATION
+"SELECT pr.SPECIALIZATION, COUNT(*) AS VISITS " +
+                "FROM PRACTITIONERS pr " +
+                "INNER JOIN VISITS v ON pr.ID = v.PRACTITIONER_ID " +
+                "WHERE CASE " +
+                "WHEN :specialization = 'ALL' OR :specialization = '' " +
+                "THEN pr.SPECIALIZATION LIKE '%' " +
+                "ELSE pr.SPECIALIZATION = :specialization " +
+                "END " +
+                "GROUP BY pr.SPECIALIZATION"
