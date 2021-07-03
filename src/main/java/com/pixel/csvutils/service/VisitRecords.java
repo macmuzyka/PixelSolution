@@ -1,6 +1,6 @@
 package com.pixel.csvutils.service;
 
-import com.pixel.csvutils.handler.VisitCSVHandler;
+import com.pixel.csvutils.handler.VisitFile;
 import com.pixel.model.Visit;
 import com.pixel.model.repository.VisitRepository;
 import org.springframework.stereotype.Service;
@@ -15,18 +15,20 @@ import java.util.List;
  */
 
 @Service
-public class VisitsFile implements CSVService{
+public class VisitRecords implements CSVPersistence {
 
-    VisitRepository visitRepository;
+    private final VisitRepository visitRepository;
+    private final VisitFile visitFile;
 
-    VisitsFile(final VisitRepository visitRepository) {
+    VisitRecords(final VisitRepository visitRepository, final VisitFile visitFile) {
         this.visitRepository = visitRepository;
+        this.visitFile = visitFile;
     }
 
     @Override
-    public void save(MultipartFile file) throws IOException {
+    public void save(MultipartFile file) {
         try {
-            List<Visit> visits = VisitCSVHandler.fromCSVFileToVisits(file.getInputStream());
+            List<Visit> visits = visitFile.fromFileToRecordsList(file.getInputStream());
             visitRepository.saveAll(visits);
         } catch (IOException ioe) {
             System.out.println("Failed to get visit csv data from file: " + ioe.getMessage());
