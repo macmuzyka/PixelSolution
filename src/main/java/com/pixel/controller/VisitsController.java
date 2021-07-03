@@ -1,7 +1,8 @@
 package com.pixel.controller;
 
-import com.pixel.model.non_entity_projection.PatientVisitsDTO;
-import com.pixel.model.non_entity_projection.PractitionerVisitsDTO;
+import com.pixel.model.non_entity_projection.PatientVisits;
+import com.pixel.model.non_entity_projection.PractitionerVisits;
+import com.sun.istack.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,17 +23,16 @@ class VisitsController {
 
     }
 
-    @GetMapping("/patients/city={city}&practitioner={practitioner}")
-    ResponseEntity<List<PatientVisitsDTO>> getPatientsVisitsByCityAndSpecialization(
-            @PathVariable String city,
-            @PathVariable String practitioner) {
-        return ResponseEntity.ok().body(visitsService.findPatientVisits(city, practitioner));
+    @GetMapping(value = "/patients/city={cities}&practitioner={practitioner}")
+    ResponseEntity<List<PatientVisits>> getPatientsVisitsByCityAndSpecialization(
+            @PathVariable @NotNull List<String> cities,
+            @PathVariable @NotNull String practitioner) {
+        return ResponseEntity.ok().body(visitsService.findPatientVisits(cities, practitioner));
     }
 
     @GetMapping("/practitioner={practitioner}")
-    ResponseEntity<List<PractitionerVisitsDTO>> getPractitionerVisits(
-            @PathVariable String practitioner) {
+    ResponseEntity<List<PractitionerVisits>> getPractitionerVisits(
+            @PathVariable @NotNull String practitioner) {
         return ResponseEntity.ok().body((visitsService.findPractitionerVisits(practitioner)));
     }
-
 }
