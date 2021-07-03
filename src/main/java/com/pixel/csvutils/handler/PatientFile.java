@@ -4,6 +4,7 @@ import com.pixel.model.Patient;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -19,23 +20,24 @@ import java.util.List;
  * on 27.06.2021
  */
 
-public class PatientCSVHandler {
+@Component
+public class PatientFile implements CSVTransformer {
 
-    static String[] HEADERS = {"patientId", "firstName", "lastName", "city", "createdAt"};
+    private static final String[] HEADERS = {"patientId", "firstName", "lastName", "city", "createdAt"};
+    private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    public static List<Patient> fromCSVFileToPatients(InputStream inputStream) {
+    @Override
+    public List<Patient> fromFileToRecordsList(InputStream inputStream) {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
-            CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT
-                    .withFirstRecordAsHeader()
-                    .withIgnoreHeaderCase()
-                    .withTrim())) {
-
+             CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT
+                     .withFirstRecordAsHeader()
+                     .withIgnoreHeaderCase()
+                     .withTrim())) {
             List<Patient> patientList = new ArrayList<>();
             Iterable<CSVRecord> records = csvParser.getRecords();
 
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
-            populatingList(patientList, records, dtf);
+            populatingList(patientList,
+                    records);
             return patientList;
 
         } catch (IOException uee) {
@@ -45,7 +47,7 @@ public class PatientCSVHandler {
 
     }
 
-    private static void populatingList(final List<Patient> patientList, final Iterable<CSVRecord> records, final DateTimeFormatter dtf) {
+    private static void populatingList(final List<Patient> patientList, final Iterable<CSVRecord> records) {
         for (CSVRecord record : records) {
             Patient patient = new Patient(
                     Integer.parseInt(record.get(HEADERS[0])),
