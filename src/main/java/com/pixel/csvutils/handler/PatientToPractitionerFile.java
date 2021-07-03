@@ -1,9 +1,10 @@
 package com.pixel.csvutils.handler;
 
-import com.pixel.model.Visit;
+import com.pixel.model.PatientToPractitioner;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,39 +19,39 @@ import java.util.List;
  * Created by Maciej Muzyka
  * on 27.06.2021
  */
+@Component
+public class PatientToPractitionerFile implements CSVTransformer {
+    static String[] HEADERS = {"patientId", "practitionerId"};
 
-public class VisitCSVHandler {
-
-    static String[] HEADERS = {"visitId", "practitionerId", "patientId"};
-
-    public static List<Visit> fromCSVFileToVisits(InputStream inputStream) {
+    @Override
+    public List<PatientToPractitioner> fromFileToRecordsList(final InputStream inputStream) {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
              CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT
                      .withFirstRecordAsHeader()
                      .withIgnoreHeaderCase()
                      .withTrim())) {
 
-            List<Visit> visitList = new ArrayList<>();
+            List<PatientToPractitioner> p2pList = new ArrayList<>();
             Iterable<CSVRecord> records = csvParser.getRecords();
 
-            listPopulating(visitList, records);
-            return visitList;
+            listPopulating(p2pList,
+                    records);
+            return p2pList;
 
         } catch (IOException uee) {
-            System.out.println("Failed to parse patient CSV file: " + uee.getMessage());
+            System.out.println("Failed to parse patient to practitioner CSV file: " + uee.getMessage());
             return Collections.emptyList();
         }
     }
 
-    private static void listPopulating(final List<Visit> visitList, final Iterable<CSVRecord> records) {
+    private static void listPopulating(final List<PatientToPractitioner> p2pList, final Iterable<CSVRecord> records) {
         for (CSVRecord record : records) {
-            Visit visit = new Visit(
+            PatientToPractitioner p2p = new PatientToPractitioner(
                     Integer.parseInt(record.get(HEADERS[0])),
-                    Integer.parseInt(record.get(HEADERS[1])),
-                    Integer.parseInt(record.get(HEADERS[2]))
+                    Integer.parseInt(record.get((HEADERS[1])))
             );
 
-            visitList.add(visit);
+            p2pList.add(p2p);
         }
     }
 }

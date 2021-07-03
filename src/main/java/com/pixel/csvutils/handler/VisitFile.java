@@ -1,9 +1,10 @@
 package com.pixel.csvutils.handler;
 
-import com.pixel.model.Practitioner;
+import com.pixel.model.Visit;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,37 +20,41 @@ import java.util.List;
  * on 27.06.2021
  */
 
-public class PractitionerCSVHandler {
+@Component
+public class VisitFile implements CSVTransformer {
 
-    static String[] HEADERS = {"practitionerId", "specialization"};
+    static String[] HEADERS = {"visitId", "practitionerId", "patientId"};
 
-    public static List<Practitioner> fromCSVFileToPractitioners(InputStream inputStream) {
+    @Override
+    public List<Visit> fromFileToRecordsList(final InputStream inputStream) {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
              CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT
                      .withFirstRecordAsHeader()
                      .withIgnoreHeaderCase()
                      .withTrim())) {
 
-            List<Practitioner> practitionersList = new ArrayList<>();
+            List<Visit> visitList = new ArrayList<>();
             Iterable<CSVRecord> records = csvParser.getRecords();
 
-            listPopulating(practitionersList, records);
-            return practitionersList;
+            listPopulating(visitList,
+                    records);
+            return visitList;
 
         } catch (IOException uee) {
-            System.out.println("Failed to parse practitioner CSV file: " + uee.getMessage());
+            System.out.println("Failed to parse patient CSV file: " + uee.getMessage());
             return Collections.emptyList();
         }
     }
 
-    private static void listPopulating(final List<Practitioner> practitionersList, final Iterable<CSVRecord> records) {
+    private static void listPopulating(final List<Visit> visitList, final Iterable<CSVRecord> records) {
         for (CSVRecord record : records) {
-            Practitioner practitioner = new Practitioner(
+            Visit visit = new Visit(
                     Integer.parseInt(record.get(HEADERS[0])),
-                    record.get(HEADERS[1])
+                    Integer.parseInt(record.get(HEADERS[1])),
+                    Integer.parseInt(record.get(HEADERS[2]))
             );
 
-            practitionersList.add(practitioner);
+            visitList.add(visit);
         }
     }
 }
