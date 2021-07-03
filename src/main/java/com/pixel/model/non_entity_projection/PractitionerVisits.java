@@ -1,21 +1,19 @@
 package com.pixel.model.non_entity_projection;
 
-import java.math.BigInteger;
-
 /**
  * Created by Maciej Muzyka
  * on 28.06.2021
  */
 
-public class PractitionerVisitsDTO {
+public class PractitionerVisits {
 
     private String specialization;
-    private BigInteger visits;
+    private long visits;
 
-    public PractitionerVisitsDTO() {
+    public PractitionerVisits() {
     }
 
-    public PractitionerVisitsDTO(final String specialization, final BigInteger visits) {
+    public PractitionerVisits(final String specialization, final long visits) {
         this.specialization = specialization;
         this.visits = visits;
     }
@@ -28,11 +26,11 @@ public class PractitionerVisitsDTO {
         this.specialization = specialization;
     }
 
-    BigInteger getVisits() {
+    long getVisits() {
         return visits;
     }
 
-    void setVisits(final BigInteger visits) {
+    void setVisits(final int visits) {
         this.visits = visits;
     }
 }
