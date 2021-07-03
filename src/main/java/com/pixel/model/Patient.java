@@ -13,7 +13,7 @@ import java.time.temporal.ChronoUnit;
 
 @Entity
 @Table(name = "patients")
-public class Patient {
+public class Patient extends BaseModel {
 
     @Id
     private int id;

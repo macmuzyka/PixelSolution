@@ -10,7 +10,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "visits")
-public class Visit {
+public class Visit extends BaseModel {
 
     @Id
     private int id;

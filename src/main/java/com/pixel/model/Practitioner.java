@@ -11,7 +11,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "practitioners")
-public class Practitioner {
+public class Practitioner extends BaseModel {
 
     @Id
     private int id;

@@ -9,7 +9,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "patient_to_practitioner")
-public class PatientToPractitioner {
+public class PatientToPractitioner extends BaseModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
