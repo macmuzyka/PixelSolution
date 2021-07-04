@@ -22,6 +22,10 @@ class VisitsService {
     }
 
     public List<PatientVisits> findPatientVisits(List<String> cities, String specialization) {
+        if (cities.isEmpty()) {
+            cities.add("");
+        }
+
         String parameterizedPatientVisitsQuery = getParameterizedQuery(cities, specialization);
         return entityManager.createNativeQuery(parameterizedPatientVisitsQuery).getResultList();
     }
