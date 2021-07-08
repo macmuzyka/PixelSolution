@@ -5,14 +5,14 @@ import com.pixel.csvutils.handler.PatientFile;
 import com.pixel.csvutils.handler.PatientToPractitionerFile;
 import com.pixel.csvutils.handler.PractitionerFile;
 import com.pixel.csvutils.handler.VisitFile;
-import com.pixel.csvutils.service.*;
+import com.pixel.csvutils.service.CSVPersistence;
+import com.pixel.csvutils.service.PersistStrategyResolver;
 import com.pixel.model.repository.PatientRepository;
 import com.pixel.model.repository.PatientToPractitionerRepository;
 import com.pixel.model.repository.PractitionerRepository;
 import com.pixel.model.repository.VisitRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.mock.web.MockMultipartFile;
@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 /**
  * Created by Maciej Muzyka
@@ -33,10 +34,6 @@ import java.nio.file.Paths;
 class WarmupDatabasePopulation implements ApplicationListener<ApplicationStartedEvent> {
 
     private static final Logger logger = LoggerFactory.getLogger(WarmupDatabasePopulation.class);
-
-    private static final String baseResourcesPath = "src/main/resources/";
-    public static final String csvFileExtension = ".csv";
-    private static final String[] filesNames = {"patients", "practitioners", "visits", "patient2practitioner"};
 
     private final PatientToPractitionerRepository patientToPractitionerRepository;
     private final PatientRepository patientRepository;
@@ -68,44 +65,55 @@ class WarmupDatabasePopulation implements ApplicationListener<ApplicationStarted
 
     @Override
     public void onApplicationEvent(final ApplicationStartedEvent applicationStartedEvent) {
-        int step = 1;
         final PersistStrategyResolver resolver = new PersistStrategyResolver(
                 patientFile, patientRepository,
                 visitFile, visitRepository,
                 practitionerFile, practitionerRepository,
                 patientToPractitionerFile, patientToPractitionerRepository);
 
+        CSVFileNameProvider provider = new CSVFileNameProvider();
+        List<String> filesNames = provider.execute();
+
         File currentFile;
         Path path;
         byte[] bytes;
+        CSVPersistence tempPersistence;
+        int filesProgress = 1;
+
+        boolean failureOnPersist = false;
 
         logger.info("Attempting to populate database in warmup application started event...");
         try {
-            int filesProgress = 1;
             for (String file : filesNames) {
                 logger.info(currentFile(file));
 
-                currentFile = new File(baseResourcesPath + file + csvFileExtension);
+                currentFile = new File(file);
                 path = Paths.get(currentFile.getPath());
 
-                CSVPersistence tempPersistence= resolver.resolve(file);
+                tempPersistence = resolver.resolve(file);
 
                 bytes = Files.readAllBytes(path);
                 tempPersistence.save(new MockMultipartFile(currentFile.getName(), bytes));
 
                 logger.info(progressionOfFilePersistence(file));
-                logger.info(progressFeedback(filesProgress));
+                logger.info(progressFeedback(filesProgress, filesNames));
 
                 filesProgress++;
-                step++;
             }
         } catch (IOException ioe) {
-            logger.error("Error populating database at step: " + step);
+            logger.error("Error populating database at step: " + filesProgress);
             logger.info(ioe.getMessage());
         } catch (IllegalPersistStrategy ips) {
+            failureOnPersist = true;
             logger.error(ips.getMessage());
         }
-        logger.info("All persistence actions completed.");
+
+        if (failureOnPersist) {
+            logger.error("Error persisting files to database");
+        } else {
+            logger.info("All persistence actions completed.");
+        }
+
     }
 
     private String currentFile(final String file) {
@@ -116,7 +124,7 @@ class WarmupDatabasePopulation implements ApplicationListener<ApplicationStarted
         return "Persistence of file " + file + " completed.";
     }
 
-    private String progressFeedback(final int filesSoFar) {
-        return ((double) filesSoFar / filesNames.length) * 100 + "% completed";
+    private String progressFeedback(final int filesProgress, final List<String> listOfFiles) {
+        return ((double) filesProgress / listOfFiles.size()) * 100 + "% completed.";
     }
 }
