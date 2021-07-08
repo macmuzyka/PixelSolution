@@ -2,6 +2,8 @@ package com.pixel.controller;
 
 import com.pixel.model.non_entity_projection.PatientVisits;
 import com.pixel.model.non_entity_projection.PractitionerVisits;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -16,6 +18,7 @@ import java.util.List;
 @Service
 class VisitsService {
     private final EntityManager entityManager;
+    private static final Logger logger = LoggerFactory.getLogger(VisitsService.class);
 
     VisitsService(final EntityManager entityManager) {
         this.entityManager = entityManager;
@@ -27,13 +30,8 @@ class VisitsService {
         }
 
         String parameterizedPatientVisitsQuery = getParameterizedQuery(cities, specialization);
+        logger.info("Exposing patient visits.");
         return entityManager.createNativeQuery(parameterizedPatientVisitsQuery).getResultList();
-    }
-
-    public List<PractitionerVisits> findPractitionerVisits(String specialization) {
-        return this.entityManager.createNativeQuery(getPractitionerVisitsQuery())
-                .setParameter("specialization", specialization)
-                .getResultList();
     }
 
     private String getParameterizedQuery(final List<String> cities, final String specialization) {
@@ -71,6 +69,13 @@ class VisitsService {
             }
         }
         return citiesQueryBuilder.toString().trim();
+    }
+
+    public List<PractitionerVisits> findPractitionerVisits(String specialization) {
+        logger.info("Exposing practitioner visits.");
+        return this.entityManager.createNativeQuery(getPractitionerVisitsQuery())
+                .setParameter("specialization", specialization)
+                .getResultList();
     }
 
     private String getPractitionerVisitsQuery() {
