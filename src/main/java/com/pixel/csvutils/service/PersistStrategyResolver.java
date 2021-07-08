@@ -46,13 +46,13 @@ public class PersistStrategyResolver {
 
     public CSVPersistence resolve(String file) {
         switch (file) {
-            case "patient2practitioner":
+            case "src/main/resources/patient2practitioner.csv":
                 return new P2PRecords(patientToPractitionerRepository, patientToPractitionerFile);
-            case "patients":
+            case "src/main/resources/patients.csv":
                 return new PatientRecords(patientRepository, patientFile);
-            case "practitioners":
+            case "src/main/resources/practitioners.csv":
                 return new PractitionerRecords(practitionerRepository, practitionerFile);
-            case "visits":
+            case "src/main/resources/visits.csv":
                 return new VisitRecords(visitRepository, visitFile);
             default:
                 throw new IllegalPersistStrategy("Persist strategy not resolved!");
