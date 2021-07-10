@@ -8,7 +8,7 @@ import java.util.List;
  * on 07.07.2021
  */
 
-class CSVFileNameProvider {
+public class CSVFileNameProvider {
     private static final String baseResourcesPath = "src/main/resources/";
     public static final String csvFileExtension = ".csv";
     private static final String[] filesNames = {"patients", "practitioners", "visits", "patient2practitioner"};
