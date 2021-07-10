@@ -10,6 +10,6 @@ import java.util.List;
  * on 01.07.2021
  */
 
-interface CSVTransformer {
+public interface CSVTransformer {
     List<? extends BaseModel> fromFileToRecordsList(InputStream inputStream);
 }
