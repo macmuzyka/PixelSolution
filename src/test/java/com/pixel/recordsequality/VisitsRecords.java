@@ -5,6 +5,7 @@ import com.pixel.model.Visit;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,19 +27,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * on 10.07.2021
  */
 
-class VisitsRecords extends RecordsEqualityTest{
+class VisitsRecords extends RecordsEqualityTest {
 
     @Test
+    @DisplayName("Both CSV Record and Model List for Visit should have an equal number of records")
     @Override
     void numberOfCSVRecordsListShouldBeEqualToModelListSize() throws IOException {
         VisitFile visitFile = new VisitFile();
         File file = new File(filesPaths.get(2));
 
-        byte[] bytes;
-        Path path;
-
-        path = Paths.get(file.getPath());
-        bytes = Files.readAllBytes(path);
+        Path path = Paths.get(file.getPath());
+        byte[] bytes = Files.readAllBytes(path);
 
         MultipartFile multipartFile = new MockMultipartFile(file.getName(), bytes);
 
