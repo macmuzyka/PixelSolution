@@ -1,8 +1,6 @@
 package com.pixel.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * Created by Maciej Muzyka
@@ -14,6 +12,7 @@ import javax.persistence.Table;
 public class Practitioner extends BaseModel {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String specialization;
 
@@ -25,7 +24,7 @@ public class Practitioner extends BaseModel {
         this.specialization = specialization;
     }
 
-    int getId() {
+    public int getId() {
         return id;
     }
 
@@ -33,7 +32,7 @@ public class Practitioner extends BaseModel {
         this.id = id;
     }
 
-    String getSpecialization() {
+    public String getSpecialization() {
         return specialization;
     }
 
