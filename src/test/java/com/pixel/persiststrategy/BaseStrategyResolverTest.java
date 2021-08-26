@@ -9,7 +9,7 @@ import com.pixel.model.repository.PatientRepository;
 import com.pixel.model.repository.PatientToPractitionerRepository;
 import com.pixel.model.repository.PractitionerRepository;
 import com.pixel.model.repository.VisitRepository;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.mock;
@@ -20,10 +20,10 @@ import static org.mockito.Mockito.mock;
  */
 
 abstract class BaseStrategyResolverTest {
-    protected PersistStrategyResolver resolver;
+    protected static PersistStrategyResolver resolver;
 
-    @BeforeEach
-    void setUp() {
+    @BeforeAll
+    static void setUp() {
         resolver = new PersistStrategyResolver(mock(PatientFile.class), mock(PatientRepository.class),
                 mock(VisitFile.class), mock(VisitRepository.class),
                 mock(PractitionerFile.class), mock(PractitionerRepository.class),
