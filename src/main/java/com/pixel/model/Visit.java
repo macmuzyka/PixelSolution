@@ -13,10 +13,14 @@ import javax.persistence.*;
 public class Visit extends BaseModel {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     private int practitioner_id;
     private int patient_id;
+
+    public Visit() {
+    }
 
     public Visit(final int id, final int practitioner_id, final int patient_id) {
         this.id = id;
@@ -24,10 +28,12 @@ public class Visit extends BaseModel {
         this.patient_id = patient_id;
     }
 
-    public Visit() {
+    public Visit(final int practitioner_id, final int patient_id) {
+        this.practitioner_id = practitioner_id;
+        this.patient_id = patient_id;
     }
 
-    int getId() {
+    public int getId() {
         return id;
     }
 
@@ -35,7 +41,7 @@ public class Visit extends BaseModel {
         this.id = id;
     }
 
-    int getPractitioner_id() {
+    public int getPractitioner_id() {
         return practitioner_id;
     }
 
@@ -43,7 +49,7 @@ public class Visit extends BaseModel {
         this.practitioner_id = practitioner_id;
     }
 
-    int getPatient_id() {
+    public int getPatient_id() {
         return patient_id;
     }
 
