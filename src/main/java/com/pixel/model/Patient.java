@@ -1,8 +1,6 @@
 package com.pixel.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
@@ -16,6 +14,7 @@ import java.time.temporal.ChronoUnit;
 public class Patient extends BaseModel {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     private String firstName;
@@ -24,7 +23,6 @@ public class Patient extends BaseModel {
     private String city;
 
     private LocalDateTime createdAt;
-
 
     public Patient(final int id, final String firstName, final String lastName, final String city, final LocalDateTime createdAt) {
         this.id = id;
@@ -37,7 +35,7 @@ public class Patient extends BaseModel {
     public Patient() {
     }
 
-    int getId() {
+    public int getId() {
         return id;
     }
 
