@@ -36,7 +36,7 @@ public class Practitioner extends BaseModel {
         return specialization;
     }
 
-    void setSpecialization(final String specialization) {
+    public void setSpecialization(final String specialization) {
         this.specialization = specialization;
     }
 
