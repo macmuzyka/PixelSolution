@@ -24,6 +24,9 @@ public class Patient extends BaseModel {
 
     private LocalDateTime createdAt;
 
+    public Patient() {
+    }
+
     public Patient(final int id, final String firstName, final String lastName, final String city, final LocalDateTime createdAt) {
         this.id = id;
         this.firstName = firstName;
@@ -32,7 +35,10 @@ public class Patient extends BaseModel {
         this.createdAt = createdAt.truncatedTo(ChronoUnit.SECONDS);
     }
 
-    public Patient() {
+    public void updateFrom(final Patient sourcePatient) {
+        firstName = sourcePatient.getFirstName();
+        lastName = sourcePatient.getLastName();
+        city = sourcePatient.getCity();
     }
 
     public int getId() {
@@ -59,11 +65,11 @@ public class Patient extends BaseModel {
         this.lastName = lastName;
     }
 
-    String getCity() {
+    public String getCity() {
         return city;
     }
 
-    void setCity(final String city) {
+    public void setCity(final String city) {
         this.city = city;
     }
 
