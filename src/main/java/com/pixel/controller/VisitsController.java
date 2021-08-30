@@ -1,7 +1,6 @@
 package com.pixel.controller;
 
-import com.pixel.model.Patient;
-import com.pixel.model.Practitioner;
+import com.pixel.model.PatientToPractitioner;
 import com.pixel.model.Visit;
 import com.pixel.model.non_entity_projection.PatientVisits;
 import com.pixel.model.non_entity_projection.PractitionerVisits;
@@ -60,9 +59,8 @@ class VisitsController {
     }
 
     @PostMapping("/add")
-    ResponseEntity<?> addNewVisit(@RequestBody Practitioner practitioner,
-                                  Patient patient) {
-        Visit newVisit = new Visit(practitioner.getId(), patient.getId());
+    ResponseEntity<?> addNewVisit(@RequestBody PatientToPractitioner p2p) {
+        Visit newVisit = new Visit(p2p.getPractitioner_id(), p2p.getPatient_id());
 
         Visit repositoryVisit = visitRepository.save(newVisit);
 
