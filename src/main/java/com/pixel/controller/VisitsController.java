@@ -4,6 +4,7 @@ import com.pixel.model.PatientToPractitioner;
 import com.pixel.model.Visit;
 import com.pixel.model.non_entity_projection.PatientVisits;
 import com.pixel.model.non_entity_projection.PractitionerVisits;
+import com.pixel.model.repository.PatientToPractitionerRepository;
 import com.pixel.model.repository.VisitRepository;
 import com.pixel.service.VisitsService;
 import com.sun.istack.NotNull;
@@ -26,12 +27,15 @@ import java.util.List;
 class VisitsController {
     private final VisitsService visitsService;
     private final VisitRepository visitRepository;
+    private final PatientToPractitionerRepository p2pRepository;
     private static final Logger logger = LoggerFactory.getLogger(VisitsController.class);
 
     VisitsController(final VisitsService visitsService,
-                     final VisitRepository visitRepository) {
+                     final VisitRepository visitRepository,
+                     final PatientToPractitionerRepository p2pRepository) {
         this.visitsService = visitsService;
         this.visitRepository = visitRepository;
+        this.p2pRepository = p2pRepository;
     }
 
     @GetMapping("/patients/all")
@@ -63,6 +67,7 @@ class VisitsController {
         Visit newVisit = new Visit(p2p.getPractitioner_id(), p2p.getPatient_id());
 
         Visit repositoryVisit = visitRepository.save(newVisit);
+        p2pRepository.save(p2p);
 
         return ResponseEntity.created(URI.create("/" + repositoryVisit.getId())).body(repositoryVisit);
     }
