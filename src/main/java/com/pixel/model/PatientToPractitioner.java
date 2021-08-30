@@ -27,7 +27,7 @@ public class PatientToPractitioner extends BaseModel {
         this.practitioner_id = practitioner_id;
     }
 
-    int getPatient_id() {
+    public int getPatient_id() {
         return patient_id;
     }
 
@@ -35,7 +35,7 @@ public class PatientToPractitioner extends BaseModel {
         this.patient_id = patient_id;
     }
 
-    int getPractitioner_id() {
+    public int getPractitioner_id() {
         return practitioner_id;
     }
 
