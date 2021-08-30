@@ -5,6 +5,7 @@ import com.pixel.model.repository.PatientRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
@@ -39,5 +40,29 @@ class PatientController {
     ResponseEntity<?> addNewPatient(@RequestBody @Valid Patient newPatient) {
         Patient repositoryPatient = patientRepository.save(newPatient);
         return ResponseEntity.created(URI.create("/" + repositoryPatient.getId())).body(repositoryPatient);
+    }
+
+    @Transactional
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updatePatient(@PathVariable int id, @RequestBody Patient newPatient) {
+        if (!patientRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        patientRepository.findById(id)
+                .ifPresent(patient -> patient.updateFrom(newPatient));
+        return ResponseEntity.noContent().build();
+    }
+
+    @Transactional
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> updatePatientCity(@PathVariable int id, @RequestBody String newCity) {
+        if (!patientRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        patientRepository.findById(id)
+                .ifPresent(patient -> patient.setCity(newCity));
+        return ResponseEntity.noContent().build();
     }
 }
