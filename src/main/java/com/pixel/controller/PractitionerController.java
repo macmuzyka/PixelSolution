@@ -6,6 +6,7 @@ import com.sun.istack.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
@@ -39,5 +40,17 @@ class PractitionerController {
     ResponseEntity<?> addNewPractitioner(@RequestBody @Valid Practitioner newPractitioner) {
         Practitioner repositoryPractitioner = practitionerRepository.save(newPractitioner);
         return ResponseEntity.created(URI.create("/" + repositoryPractitioner.getId())).body(repositoryPractitioner);
+    }
+
+    @Transactional
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> updatePatientCity(@PathVariable int id, @RequestBody String newSpecialization) {
+        if (!practitionerRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        practitionerRepository.findById(id)
+                .ifPresent(practitioner -> practitioner.setSpecialization(newSpecialization));
+        return ResponseEntity.noContent().build();
     }
 }
