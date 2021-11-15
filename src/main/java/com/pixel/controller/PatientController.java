@@ -2,12 +2,16 @@ package com.pixel.controller;
 
 import com.pixel.model.Patient;
 import com.pixel.model.repository.PatientRepository;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.net.URI;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 /**
@@ -34,6 +38,17 @@ class PatientController {
     @GetMapping("/name={firstName}&lastname={lastName}")
     ResponseEntity<Patient> getDesiredPatient(@PathVariable final String firstName, @PathVariable final String lastName) {
         return ResponseEntity.ok().body(patientRepository.findPatientByFirstNameAndLastName(firstName, lastName));
+    }
+
+    @GetMapping("/created/earlier/than={timestamp}")
+    ResponseEntity<List<Patient>> getPatientsCreatedEarlierThanGivenTimestamp(@PathVariable String timestamp) {
+        String[] dateTimeArray = timestamp.replace("'", "").split("T");
+        String[] date = dateTimeArray[0].split("-");
+        String[] time = dateTimeArray[1].split(":");
+        LocalDate d = LocalDate.of(Integer.parseInt(date[0]), Integer.parseInt(date[1]), Integer.parseInt(date[2]));
+        LocalTime t = LocalTime.of(Integer.parseInt(time[0]), Integer.parseInt(time[1]), Integer.parseInt(time[0]));
+
+        return ResponseEntity.ok(patientRepository.findPatientsByCreatedAtBefore(LocalDateTime.of(d, t)));
     }
 
     @PostMapping("/add")
@@ -65,4 +80,11 @@ class PatientController {
                 .ifPresent(patient -> patient.setCity(newCity));
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/between/from={from},upTo={upTo}")
+    public ResponseEntity<List<Patient>> getPatientsCreatedBetween(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate from,
+                                                                   @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate upTo) {
+        return ResponseEntity.ok(patientRepository.findPatientsByCreatedAtBetween(from, upTo));
+    }
 }
+

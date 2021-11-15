@@ -6,11 +6,13 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.stereotype.Component;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -54,8 +56,7 @@ public class PatientFile implements CSVTransformer {
                     record.get(HEADERS[1]),
                     record.get(HEADERS[2]),
                     record.get(HEADERS[3]),
-                    LocalDateTime.parse(record.get(HEADERS[4]), dtf).truncatedTo(ChronoUnit.SECONDS)
-            );
+                    LocalDate.parse(record.get(HEADERS[4]), dtf));
 
             patientList.add(patient);
         }

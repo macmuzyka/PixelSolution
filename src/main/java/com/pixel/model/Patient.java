@@ -1,8 +1,7 @@
 package com.pixel.model;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
+import java.time.LocalDate;
 
 /**
  * Created by Maciej Muzyka
@@ -22,17 +21,17 @@ public class Patient extends BaseModel {
 
     private String city;
 
-    private LocalDateTime createdAt;
+    private LocalDate createdAt;
 
     public Patient() {
     }
 
-    public Patient(final int id, final String firstName, final String lastName, final String city, final LocalDateTime createdAt) {
+    public Patient(final int id, final String firstName, final String lastName, final String city, final LocalDate createdAt) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.city = city;
-        this.createdAt = createdAt.truncatedTo(ChronoUnit.SECONDS);
+        this.createdAt = createdAt;
     }
 
     public void updateFrom(final Patient sourcePatient) {
@@ -73,11 +72,11 @@ public class Patient extends BaseModel {
         this.city = city;
     }
 
-    LocalDateTime getCreatedAt() {
+    public LocalDate getCreatedAt() {
         return createdAt;
     }
 
-    void setCreatedAt(final LocalDateTime createdAt) {
+    void setCreatedAt(final LocalDate createdAt) {
         this.createdAt = createdAt;
     }
 
