@@ -71,4 +71,9 @@ class VisitsController {
 
         return ResponseEntity.created(URI.create("/" + repositoryVisit.getId())).body(repositoryVisit);
     }
+
+    @GetMapping("/join")
+    public ResponseEntity<?> getJoin() {
+        return ResponseEntity.ok(visitRepository.findPatientJoin());
+    }
 }

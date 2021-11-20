@@ -81,9 +81,9 @@ class PatientController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/between/from={from},upTo={upTo}")
-    public ResponseEntity<List<Patient>> getPatientsCreatedBetween(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate from,
-                                                                   @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate upTo) {
+    @GetMapping("/between")
+    public ResponseEntity<List<Patient>> getPatientsCreatedBetween(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate from,
+                                                                   @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate upTo) {
         return ResponseEntity.ok(patientRepository.findPatientsByCreatedAtBetween(from, upTo));
     }
 }
