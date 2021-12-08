@@ -2,7 +2,6 @@ package com.pixel.controller;
 
 import com.pixel.model.Patient;
 import com.pixel.model.repository.PatientRepository;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -82,8 +81,8 @@ class PatientController {
     }
 
     @GetMapping("/between")
-    public ResponseEntity<List<Patient>> getPatientsCreatedBetween(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate from,
-                                                                   @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate upTo) {
+    public ResponseEntity<List<Patient>> getPatientsCreatedBetween(@RequestParam String from,
+                                                                   @RequestParam String upTo) {
         return ResponseEntity.ok(patientRepository.findPatientsByCreatedAtBetween(from, upTo));
     }
 }

@@ -76,4 +76,28 @@ class VisitsController {
     public ResponseEntity<?> getJoin() {
         return ResponseEntity.ok(visitRepository.findPatientJoin());
     }
+
+    @GetMapping("/else")
+    public ResponseEntity<?> somethingElse(@RequestParam String beginning,
+                                           @RequestParam String end) {
+        return ResponseEntity.ok(visitRepository.findElseVisits(beginning, end));
+    }
+
+    @GetMapping("/else-count")
+    public ResponseEntity<?> somethingElseCount(@RequestParam String beginning,
+                                                @RequestParam String end) {
+        return ResponseEntity.ok(visitRepository.findElseVisitsCount(beginning, end));
+    }
+
+    @GetMapping("/else-complex")
+    public ResponseEntity<?> somethingElseComplex(@RequestParam String beginning,
+                                                @RequestParam String end) {
+        return ResponseEntity.ok(visitRepository.findVisitsWithComplexQuery(beginning, end));
+    }
+
+    @GetMapping("/else-complex-count")
+    public ResponseEntity<?> somethingElseComplexCount(@RequestParam String beginning,
+                                                  @RequestParam String end) {
+        return ResponseEntity.ok(visitRepository.findVisitsWithComplexQueryCount(beginning, end));
+    }
 }
